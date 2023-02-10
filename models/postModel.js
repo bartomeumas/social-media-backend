@@ -1,9 +1,10 @@
 const mongoose = require("mongoose");
 const postSchema = mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: [true, "You must provide an userId"],
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
     text: {
       type: String,
