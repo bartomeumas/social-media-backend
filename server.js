@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const dotenv = require("dotenv").config();
 const { errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
@@ -7,6 +8,14 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 const app = express();
+
+// Enable CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    allowedHeaders: ["Authorization"],
+  })
+);
 
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");

@@ -6,9 +6,10 @@ const {
   updatePost,
   deletePost,
 } = require("../controllers/postController");
+const { protect } = require("../middleware/authMiddleware");
 
-router.route("/").get(getPosts).post(setPost);
-router.route("/:id").put(updatePost).delete(deletePost);
+router.route("/").get(protect, getPosts).post(protect, setPost);
+router.route("/:id").put(protect, updatePost).delete(protect, deletePost);
 
 // router.get("/", getPosts);
 

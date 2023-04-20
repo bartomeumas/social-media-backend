@@ -3,11 +3,10 @@ const asyncHandler = require("express-async-handler");
 const Post = require("../models/postModel");
 const User = require("../models/userModel");
 
-// @desc Get posts from user
+// @desc Get posts
 // @route GET /api/posts
-// @access Private
+// @access Public
 const getPosts = asyncHandler(async (req, res) => {
-  console.log(req.user);
   const posts = await Post.find({ user: req.user.id });
 
   res.status(200).json(posts);
@@ -24,6 +23,7 @@ const setPost = asyncHandler(async (req, res) => {
 
   const post = await Post.create({
     user: req.user.id,
+    email: req.user.email,
     text: req.body.text,
   });
 
@@ -40,13 +40,16 @@ const updatePost = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Post not found");
   }
+  const user = await User.findById(req.user.id);
 
-  if (!req.user) {
+  // Check for user
+  if (!user) {
     res.status(401);
     throw new Error("User not found");
   }
 
-  if (post.user.toString() !== req.user.id) {
+  // Make sure logged user matches the post author
+  if (post.user.toString() !== user.id) {
     res.status(401);
     throw new Error("User not authorized");
   }

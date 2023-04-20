@@ -6,9 +6,16 @@ const postSchema = mongoose.Schema(
       required: true,
       ref: "User",
     },
+    email: {
+      type: String,
+    },
     text: {
       type: String,
       required: [true, "Please add a text value"],
+    },
+    likes: {
+      type: [String],
+      default: [],
     },
   },
   { timestamps: true }

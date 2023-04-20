@@ -9,16 +9,18 @@ const generateToken = (id) => {
   });
 };
 
+// desc Register User
+// @route POST /api/user
+// @access Public
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(name, email, password);
 
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please add all fields");
   }
 
-  // check if the user is already registered
+  // check if the user exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -51,6 +53,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// desc Authenticate User
+// @route POST /api/users/login
+// @access Public
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -68,9 +73,17 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid credentials");
   }
 });
-
+// desc Get User Data
+// @route POST /api/users/me
+// @access  Public
 const getMe = asyncHandler(async (req, res) => {
-  res.json({ message: "Display logged user data" });
+  const { _id, name, email } = await User.findById(req.user.id);
+
+  res.json({
+    id: _id,
+    name,
+    email,
+  });
 });
 
 module.exports = {
